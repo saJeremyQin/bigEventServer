@@ -21,3 +21,21 @@ exports.reg_login_schema = {
         password
     }
 }
+
+// id的校验规则
+const id = joi.number().integer().min(1).required()
+
+// 昵称的校验规则
+const nickname = joi.string().min(2).required()
+
+// 邮箱的校验规则
+const email = joi.string().email().required()
+
+// 更新用户信息校验规则对象，注意如果表单传过来的值名字和校验规则不一致，要用：语法
+exports.update_userinfo_schema = {
+    body: {
+        id,
+        nickname,
+        email
+    }
+}

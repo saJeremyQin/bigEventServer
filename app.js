@@ -3,6 +3,7 @@ const express = require('express')
 
 // 导入router模块
 const userRouter = require('./router/user')
+const userInfoRouter = require('./router/userInfo')
 
 // 导入joi模块
 const joi = require('joi')
@@ -39,10 +40,14 @@ app.use(function(req, res, next) {
 const expressJWT = require('express-jwt')
 const config = require('./config')
 
+// 使用解析token的中间件
 app.use(expressJWT({ secret: config.jwtSecretKey }).unless({ path: [/^\/api\//] }))
 
-// 导入并注册路由模块
+// 配置注册路由模块
 app.use('/api/', userRouter)
+
+// 配置用户信息路由模块
+app.use('/my/', userInfoRouter)
 
 // 定义全局的错误处理
 app.use(function(err, req, res, next) {
@@ -51,6 +56,7 @@ app.use(function(err, req, res, next) {
     // 数据验证处理失败的错误
     if (err instanceof joi.ValidationError)
         return res.cc(err)
+
 
     // 身份认证失败导致的错误
     if (err.name === 'UnauthorizedError')
