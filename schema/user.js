@@ -39,3 +39,12 @@ exports.update_userinfo_schema = {
         email
     }
 }
+
+// 更新用户密码规则对象
+exports.update_password_schema = {
+    body: {
+        oldPwd: password,
+        // joi.ref 表示和oldPwd的内容保持一致，not表示一定不能一致，concat表示合并两条规则
+        newPwd: joi.not(joi.ref('oldPwd')).concat(password)
+    }
+}
