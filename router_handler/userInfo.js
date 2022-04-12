@@ -61,8 +61,8 @@ exports.updateUserInfo = (req, res) => {
 // 修改用户密码的处理函数
 exports.updatePassword = (req, res) => {
     // 查询提交的旧密码是否一致，内容在req.body里
-    console.log(req.body);
-    console.log(req.user);
+    // console.log(req.body);
+    // console.log(req.user);
 
 
     var sqlstr = 'select password from ev_users where id=?'
@@ -100,4 +100,35 @@ exports.updatePassword = (req, res) => {
 
         })
     })
+}
+
+// 更新用户头像的处理函数
+exports.updateAvatar = (req, res) => {
+
+    console.log(req.user);
+    console.log('this is updateAvatar');
+    console.log(req.body);
+
+
+
+    // 定义sql操作的字符串
+    var sqlstr = 'update ev_users set user_pic=? where id=?'
+
+    db.query(sqlstr, [req.body.avatar, req.user.id], (err, results) => {
+
+        // 如执行sql语句失败
+        if (err)
+            return res.cc(err)
+
+        // 如果查询到的结果集条数不为1
+        if (results.affectedRows !== 1)
+            return res.cc('更新用户头像失败！')
+
+        // 如果更新成功
+        res.cc('修改用户头像成功', 0)
+
+
+    })
+
+
 }

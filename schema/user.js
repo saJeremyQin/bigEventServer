@@ -31,6 +31,9 @@ const nickname = joi.string().min(2).required()
 // 邮箱的校验规则
 const email = joi.string().email().required()
 
+// 用户头像的校验规则
+const avatar = joi.string().dataUri().required()
+
 // 更新用户信息校验规则对象，注意如果表单传过来的值名字和校验规则不一致，要用：语法
 exports.update_userinfo_schema = {
     body: {
@@ -46,5 +49,12 @@ exports.update_password_schema = {
         oldPwd: password,
         // joi.ref 表示和oldPwd的内容保持一致，not表示一定不能一致，concat表示合并两条规则
         newPwd: joi.not(joi.ref('oldPwd')).concat(password)
+    }
+}
+
+// 更新用户头像规则对象
+exports.update_avatar_schema = {
+    body: {
+        avatar,
     }
 }
