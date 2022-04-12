@@ -4,6 +4,7 @@ const express = require('express')
 // 导入router模块
 const userRouter = require('./router/user')
 const userInfoRouter = require('./router/userInfo')
+const artCatRouter = require('./router/artcate')
 
 // 导入joi模块
 const joi = require('joi')
@@ -48,6 +49,9 @@ app.use('/api/', userRouter)
 
 // 配置用户信息路由模块
 app.use('/my/', userInfoRouter)
+
+// 配置文章分类路由模块,挂载统一的访问前缀
+app.use('/my/article/', artCatRouter)
 
 // 定义全局的错误处理
 app.use(function(err, req, res, next) {

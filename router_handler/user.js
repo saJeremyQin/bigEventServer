@@ -83,7 +83,7 @@ exports.login = (req, res) => {
         if (!compareResult)
             return res.cc('登录失败！')
 
-        console.log(results[0]);
+        //console.log(results[0]);
 
         // 如果比对成功，返回登录成功的状态信息和token字符串
         var user = {...results[0], password: '', user_pic: '' }

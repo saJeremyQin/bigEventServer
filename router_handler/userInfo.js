@@ -126,8 +126,6 @@ exports.updateAvatar = (req, res) => {
 
         // 如果更新成功
         res.cc('修改用户头像成功', 0)
-
-
     })
 
 
