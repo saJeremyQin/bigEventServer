@@ -7,6 +7,8 @@ const joi = require('joi')
  * * max(length) 最大长度 
  * * required() 值是必填项，不能为 undefined 
  * * pattern(正则表达式) 值必须符合正则表达式的规则 */
+
+// 定义分类名称和别名的校验规则
 const name = joi.string().required()
 const alias = joi.string().alphanum().required()
 
@@ -31,5 +33,14 @@ exports.delete_cate_schema = {
 exports.get_cate_schema = {
     params: {
         id
+    }
+}
+
+// 更新文章分类的校验规则对象
+exports.update_cate_schema = {
+    body: {
+        Id: id,
+        name,
+        alias
     }
 }
