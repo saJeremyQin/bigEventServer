@@ -13,6 +13,7 @@ exports.getArticleCates = (req, res) => {
             return res.cc(err)
         if (results.length === 0)
             return res.cc('获取文章分类失败')
+        console.log(results);
 
         res.send({
             status: 0,
@@ -103,7 +104,7 @@ exports.getCateById = (req, res) => {
     })
 }
 
-// 更新文章分类的处理函数
+// 根据Id更新文章分类的处理函数
 exports.updateCateById = (req, res) => {
 
     // 查询分类名称和别名是否被占用,and后边要用括号（这样查询的时候才能均把id排除在外）

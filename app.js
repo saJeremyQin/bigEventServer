@@ -5,6 +5,7 @@ const express = require('express')
 const userRouter = require('./router/user')
 const userInfoRouter = require('./router/userInfo')
 const artCatRouter = require('./router/artcate')
+const articleRouter = require('./router/article')
 
 // 导入joi模块
 const joi = require('joi')
@@ -44,14 +45,20 @@ const config = require('./config')
 // 使用解析token的中间件
 app.use(expressJWT({ secret: config.jwtSecretKey }).unless({ path: [/^\/api\//] }))
 
-// 配置注册路由模块
-app.use('/api/', userRouter)
+// 配置注册路由模块，注意api后边不要再带/
+app.use('/api', userRouter)
 
 // 配置用户信息路由模块
-app.use('/my/', userInfoRouter)
+app.use('/my', userInfoRouter)
 
 // 配置文章分类路由模块,挂载统一的访问前缀
-app.use('/my/article/', artCatRouter)
+app.use('/my/article', artCatRouter)
+
+// 配置文章路由模块，挂载统一的访问前缀
+app.use('/my/article', articleRouter)
+
+// 托管静态资源文件
+app.use('/uploads', express.static('./uploads'))
 
 // 定义全局的错误处理
 app.use(function(err, req, res, next) {
