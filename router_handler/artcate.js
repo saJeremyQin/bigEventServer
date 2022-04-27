@@ -96,10 +96,13 @@ exports.getCateById = (req, res) => {
             return res.cc(err)
         if (results.length !== 1)
             return res.cc('获取文章分类失败')
+        console.log(results);
+
         res.send({
             status: 0,
             message: '获取文章分类成功',
-            data: results
+            // 结果集是一个数组，需要指定数组的第一个元素，这样传过去的才是正确的对象
+            data: results[0]
         })
     })
 }
