@@ -1,11 +1,11 @@
 // 导入数据库操作模块
 const db = require('../db/index')
 
-// 获取文章分类的处理函数
+// 获取文章分类列表的处理函数
 exports.getArticleCates = (req, res) => {
 
     // 定义sql语句
-    var sqlstr = 'select * from ev_article_cate where is_delete=0 order by id asc'
+    var sqlstr = 'select id AS Id,name,alias,is_delete from ev_article_cate where is_delete=0 order by id asc'
 
     db.query(sqlstr, (err, results) => {
         // sql语句执行失败
@@ -88,7 +88,7 @@ exports.deleteCateById = (req, res) => {
 // 根据id获取文章分类的处理函数
 exports.getCateById = (req, res) => {
     // 定义获取文章分类的sql语句
-    var sqlstr = 'select * from ev_article_cate where id=?'
+    var sqlstr = 'select id AS Id, name, alias, is_delete from ev_article_cate where id=?'
 
     // 执行sql查询
     db.query(sqlstr, req.params.id, (err, results) => {
