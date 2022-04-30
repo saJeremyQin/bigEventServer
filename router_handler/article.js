@@ -39,7 +39,7 @@ exports.addArticle = (req, res) => {
         // 展开运算符，标题、分类Id、内容、发布状态
         ...req.body,
         // 文章的存储路径
-        cover_img: path.join('/uploads', req.file.fieldname),
+        cover_img: path.join('/uploads', req.file.filename),
         // 文章的发布日期, 格式如 2022-04-16T02:47:08.121Z
         pub_date: new Date(),
         // 作者id，从req.user里获取
@@ -64,19 +64,27 @@ exports.addArticle = (req, res) => {
 // 获取文章列表的处理函数
 exports.getArticleList = (req, res) => {
     //处理需要查询的文章id
-    var idMax = req.query.pagenum * req.query.pagesize
-    var idMin = (req.query.pagenum - 1) * req.query.pagesize
+    // var idMax = req.query.pagenum * req.query.pagesize
+    // var idMin = (req.query.pagenum - 1) * req.query.pagesize
+    // // console.log(idMin);
+    // // console.log(idMax);
+
+
 
     // 定义操作数据库的sql语句，用到了join语法，从ev_article中查4个值，从ev_article_cate中查1个值
     // 这里用到的是内连接，两张表中都有的文章分类id，才会出现在结果集中
-    var sqlstr = 'select a.id as Id,a.title, a.pub_date,a.state, ac.name as cate_name from ev_articles as a join ev_article_cate as ac on (a.cate_id=ac.id) where a.id<? and a.id>=?'
+    // var sqlstr = 'select a.id as Id,a.title, a.pub_date,a.state, ac.name as cate_name from ev_articles as a join ev_article_cate as ac on (a.cate_id=ac.id) where a.id<? and a.id>=?'
+    var sqlstr = 'select a.id as Id,a.title, a.pub_date,a.state, ac.name as cate_name from ev_articles as a join ev_article_cate as ac on (a.cate_id=ac.id) '
 
     // 获取文章列表
-    db.query(sqlstr, [idMax, idMin], (err, results) => {
+    //db.query(sqlstr, [idMax, idMin], (err, results) => {
+    db.query(sqlstr, (err, results) => {
         if (err)
             return res.cc(err)
         if (results.length === 0)
             return res.cc('获取文章列表失败')
+
+        console.log(results);
 
         res.send({
             status: 0,
