@@ -19,10 +19,14 @@ const pagenum = joi.number().integer().min(1).required()
 const pagesize = joi.number().integer().min(1).max(50).required()
 
 // cate_id可以为空
-const l_cate_id = joi.string().allow('')
+//const l_cate_id = joi.number().integer().min(1).optional()
+const l_cate_id = joi.string().allow('').optional()
 
 // 状态可以为空，或者已发布，草稿，为空时默认为草稿
-const l_state = joi.string().valid('已发布', '草稿', '').empty().default('草稿')
+//const l_state = joi.string().valid('已发布', '草稿').empty('').default('')
+
+// 状态可以为空，有时候可能需要所有状态的都列上
+const l_state = joi.string().valid('已发布', '草稿', '').optional()
 
 // 定义根据id获取删除文章数据的id规则
 const id = joi.number().integer().min(1).required()

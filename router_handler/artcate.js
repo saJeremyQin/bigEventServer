@@ -13,7 +13,7 @@ exports.getArticleCates = (req, res) => {
             return res.cc(err)
         if (results.length === 0)
             return res.cc('获取文章分类失败')
-        console.log(results);
+                //console.log(results);
 
         res.send({
             status: 0,
@@ -96,7 +96,7 @@ exports.getCateById = (req, res) => {
             return res.cc(err)
         if (results.length !== 1)
             return res.cc('获取文章分类失败')
-        console.log(results);
+                //console.log(results);
 
         res.send({
             status: 0,

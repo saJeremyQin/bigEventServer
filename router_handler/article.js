@@ -19,6 +19,8 @@ exports.addArticle = (req, res) => {
     //   filename: 'c97b1019ae5905abff838e5cc6996337',          **随机生成的文件名
     //   path: 'F:\\learning\\api_server\\uploads\\c97b1019ae5905abff838e5cc6996337',
     //   size: 3024
+    console.log(req.file);
+
 
 
     if (!req.file || req.file.fieldname !== 'cover_img')
@@ -64,35 +66,73 @@ exports.addArticle = (req, res) => {
 // 获取文章列表的处理函数
 exports.getArticleList = (req, res) => {
     //处理需要查询的文章id
-    // var idMax = req.query.pagenum * req.query.pagesize
-    // var idMin = (req.query.pagenum - 1) * req.query.pagesize
-    // // console.log(idMin);
-    // // console.log(idMax);
 
 
+    console.log(req.query);
 
-    // 定义操作数据库的sql语句，用到了join语法，从ev_article中查4个值，从ev_article_cate中查1个值
-    // 这里用到的是内连接，两张表中都有的文章分类id，才会出现在结果集中
-    // var sqlstr = 'select a.id as Id,a.title, a.pub_date,a.state, ac.name as cate_name from ev_articles as a join ev_article_cate as ac on (a.cate_id=ac.id) where a.id<? and a.id>=?'
-    var sqlstr = 'select a.id as Id,a.title, a.pub_date,a.state, ac.name as cate_name from ev_articles as a join ev_article_cate as ac on (a.cate_id=ac.id) '
+    var cate_id = req.query.cate_id || null
+    var state = req.query.state || null
+    var pagenum = req.query.pagenum
+    var pagesize = req.query.pagesize
 
-    // 获取文章列表
-    //db.query(sqlstr, [idMax, idMin], (err, results) => {
-    db.query(sqlstr, (err, results) => {
-        if (err)
+    // if (typeof(req.query.cate_id) === 'undefined')
+    //     cate_id = NULL
+
+    // console.log(cate_id);
+
+    // console.log('----')
+    // console.log(req.query.pp || null);
+    // console.log('kkkkk');
+    var tmpResults = []
+
+
+    //定义操作数据库的sql语句，用到了join语法，从ev_article中查4个值，从ev_article_cate中查1个值
+    //这里用到的是内连接，两张表中都有的文章分类id，才会出现在结果集中
+
+    var  sqlstr  =  'select a.id as Id, a.title, a.pub_date, a.state, b.name as cate_name from ev_articles as a,ev_article_cate as b where a.cate_id = b.id and a.cate_id = ifnull(?, a.cate_id)  and a.state = ifnull(?, a.state) and a.is_delete = 0  limit ?,?'
+        //const sql = 'select a.id, a.title, a.pub_date, a.state, b.name as cate_name from ev_articles as a,ev_article_cate as b where a.cate_id = b.id and (a.cate_id = CASE WHEN ? IS NULL THEN a.cate_id ELSE ? END)  and a.is_delete = 0  limit ?,?'
+        //db.query(sqlstr, (err, results) => {
+    db.query(sqlstr, [cate_id, state, (pagenum - 1) * pagesize, pagesize], (err, results) => {
+        if (err) {
+            console.log('[SELECT ERROR] - ', err.message); // 方便调试用
             return res.cc(err)
+        }
+
         if (results.length === 0)
-            return res.cc('获取文章列表失败')
+            return res.cc('获取文章列表失败1')
 
-        console.log(results);
+        tempResults = results
 
-        res.send({
-            status: 0,
-            message: '获取文章列表成功！',
-            data: results
+        // 查询总计多少条，计算total的方法，应当与上边的cate_id和state条件保持一致
+        var countsql = 'select * from ev_articles where cate_id=ifnull(?, cate_id) and state=ifnull(?, state) and is_delete=0'
+        db.query(countsql, [cate_id, state], (err, results) => {
+            if (err) {
+                console.log('[SELECT ERROR] - ', err.message);
+                //return res.cc(err)
+                return res.cc('获取文章列表失败2')
+            }
+            res.send({
+                status: 0,
+                message: '获取文章列表成功！',
+                data: tempResults,
+                total: results.length
+            })
+
         })
-
     })
+
+
+    // // 获取总条数
+    // let total = null;
+    // const countsql = 'select * from ev_articles where is_delete = 0'
+    // db.query(countsql, (err, total) => {
+    //     if (err)
+    //         return res.cc(err)
+    // })
+    // console.log(total);
+
+
+
 }
 
 // 根据id删除文章数据的处理函数
